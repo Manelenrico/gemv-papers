@@ -1,7 +1,8 @@
 # gemv-papers
 
 Static link pages with preview cards for the G-EMV series of papers. No CSS
-frameworks, no JavaScript, no tracking — one HTML file per paper and its card image.
+frameworks, no tracking — one HTML file per paper and its card image; the front page
+carries its own small script for the language switch and the breathing sphere.
 
 | page | paper | destination |
 |---|---|---|

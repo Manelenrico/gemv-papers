@@ -21,38 +21,32 @@
 <meta name="twitter:description" content="Two identical agents, with no reward and no training, play forty games in a world where the last one standing wins: they never struck first, defended the sibling one hundred and four times, and gave away what they carried.">
 <meta name="twitter:image" content="https://manelenrico.github.io/gemv-papers/img/pack-card.png">
 
-<style>
-  body { max-width: 46rem; margin: 3rem auto; padding: 0 1.2rem;
-         font-family: Georgia, "Times New Roman", serif; line-height: 1.55; color: #1a1a1a; background: #fff; }
-  nav { font-family: system-ui, sans-serif; font-size: .9rem; padding-bottom: .9rem;
-        border-bottom: 1px solid #ddd; margin-bottom: 2rem; }
-  nav a { color: #1a1a1a; }
-  nav .brand { font-weight: 600; text-decoration: none; }
-  nav .brand:hover { text-decoration: underline; }
-  nav .crumbs { display: block; margin-top: .5rem; color: #666; }
-  nav .bar { color: #ccc; padding: 0 .35rem; }
-  nav .here { color: #666; }
-  h1 { font-size: 1.5rem; line-height: 1.3; margin: 0 0 1rem; }
-  p.lede { font-size: 1.05rem; color: #333; }
-  img { width: 100%; height: auto; border: 1px solid #ddd; margin: 1.6rem 0; }
-  a.cta { display: inline-block; font-family: system-ui, sans-serif; font-size: 1rem;
-          padding: .6rem 1.1rem; border: 1px solid #1a1a1a; text-decoration: none; color: #1a1a1a; }
-  p.note { font-family: system-ui, sans-serif; font-size: .85rem; color: #666; margin-top: 1.6rem; }
-  p.foot { font-family: system-ui, sans-serif; font-size: .9rem; margin-top: 2.4rem;
-           padding-top: .9rem; border-top: 1px solid #ddd; }
-  p.foot a { color: #1a1a1a; }
-</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/site.css">
 </head>
 <body>
-<nav>
-  <a class="brand" href="../">G-EMV papers</a>
-  <span class="crumbs"><a href="../engine/">1 &middot; The engine</a><span class="bar">|</span><a href="../hive/">2 &middot; The Hive</a><span class="bar">|</span><span class="here">3 &middot; The Pack</span><span class="bar">|</span><a href="../thinking/">4 &middot; Thinking</a><span class="bar">|</span><a href="../curiosity/">5 &middot; Curiosity</a></span>
-</nav>
+<div class="wrap">
+<header class="head-paper">
+  <a class="mark" href="../">G-EMV</a>
+  <canvas id="sphere-mini" class="mini" aria-label="A small breathing sphere of points"></canvas>
+</header>
+<nav class="crumbs"><a href="../engine/">1 &middot; The engine</a><span class="bar">|</span><a href="../hive/">2 &middot; The Hive</a><span class="bar">|</span><span class="here">3 &middot; The Pack</span><span class="bar">|</span><a href="../thinking/">4 &middot; Thinking</a><span class="bar">|</span><a href="../curiosity/">5 &middot; Curiosity</a></nav>
+<article>
 <h1>G-EMV: the Pack. Care Without Reward in a World That Pays for Killing</h1>
 <p class="lede">Two identical agents, with no reward and no training, play forty games in a world where the last one standing wins: they never struck first, defended the sibling one hundred and four times, and gave away what they carried.</p>
 <img src="../img/pack.png" alt="Three moments of one game drawn from the agents' own logs: the healthy sibling reaches the wounded one, drops a bandage on the ground, and the wounded one heals from seven to fifty-seven health.">
 <p><a class="cta" href="https://doi.org/10.5281/zenodo.22713650">Read on Zenodo</a></p>
 <p class="note">Paper three of three. Concept DOI (all versions): <a href="https://doi.org/10.5281/zenodo.22713649">10.5281/zenodo.22713649</a>.</p>
-<p class="foot"><a href="../">&larr; All papers</a></p>
+</article>
+<nav class="pager"><a class="prev" href="../hive/">&larr; 2 &middot; The Hive</a><a class="next" href="../thinking/">4 &middot; Thinking &rarr;</a></nav>
+<p class="all"><a href="../">&larr; All papers</a></p>
+<footer>
+  <span><a href="https://orcid.org/0009-0008-1732-6310">Manel Enrico</a> · Independent researcher, Barcelona</span>
+  <span>An ongoing line of research on homeostatic agents</span>
+</footer>
+</div>
+<script src="../js/sphere.js"></script>
 </body>
 </html>

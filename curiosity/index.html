@@ -21,38 +21,32 @@
 <meta name="twitter:description" content="This work observes and tests an artificial creature made of two parts. A body that feels what it lacks in three dimensions, its body, its resources and its bonds: what that body feels is what we call emotion here. And beside it a head that talks, a language model that advises it: that is reason. The question is when thinking is of use to a body like this.">
 <meta name="twitter:image" content="https://manelenrico.github.io/gemv-papers/img/curiosity-card.png">
 
-<style>
-  body { max-width: 46rem; margin: 3rem auto; padding: 0 1.2rem;
-         font-family: Georgia, "Times New Roman", serif; line-height: 1.55; color: #1a1a1a; background: #fff; }
-  nav { font-family: system-ui, sans-serif; font-size: .9rem; padding-bottom: .9rem;
-        border-bottom: 1px solid #ddd; margin-bottom: 2rem; }
-  nav a { color: #1a1a1a; }
-  nav .brand { font-weight: 600; text-decoration: none; }
-  nav .brand:hover { text-decoration: underline; }
-  nav .crumbs { display: block; margin-top: .5rem; color: #666; }
-  nav .bar { color: #ccc; padding: 0 .35rem; }
-  nav .here { color: #666; }
-  h1 { font-size: 1.5rem; line-height: 1.3; margin: 0 0 1rem; }
-  p.lede { font-size: 1.05rem; color: #333; }
-  img { width: 100%; height: auto; border: 1px solid #ddd; margin: 1.6rem 0; }
-  a.cta { display: inline-block; font-family: system-ui, sans-serif; font-size: 1rem;
-          padding: .6rem 1.1rem; border: 1px solid #1a1a1a; text-decoration: none; color: #1a1a1a; }
-  p.note { font-family: system-ui, sans-serif; font-size: .85rem; color: #666; margin-top: 1.6rem; }
-  p.foot { font-family: system-ui, sans-serif; font-size: .9rem; margin-top: 2.4rem;
-           padding-top: .9rem; border-top: 1px solid #ddd; }
-  p.foot a { color: #1a1a1a; }
-</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/site.css">
 </head>
 <body>
-<nav>
-  <a class="brand" href="../">G-EMV papers</a>
-  <span class="crumbs"><a href="../engine/">1 &middot; The engine</a><span class="bar">|</span><a href="../hive/">2 &middot; The Hive</a><span class="bar">|</span><a href="../pack/">3 &middot; The Pack</a><span class="bar">|</span><a href="../thinking/">4 &middot; Thinking</a><span class="bar">|</span><span class="here">5 &middot; Curiosity</span></span>
-</nav>
+<div class="wrap">
+<header class="head-paper">
+  <a class="mark" href="../">G-EMV</a>
+  <canvas id="sphere-mini" class="mini" aria-label="A small breathing sphere of points"></canvas>
+</header>
+<nav class="crumbs"><a href="../engine/">1 &middot; The engine</a><span class="bar">|</span><a href="../hive/">2 &middot; The Hive</a><span class="bar">|</span><a href="../pack/">3 &middot; The Pack</a><span class="bar">|</span><a href="../thinking/">4 &middot; Thinking</a><span class="bar">|</span><span class="here">5 &middot; Curiosity</span></nav>
+<article>
 <h1>G-EMV: Emotion and Reason in an Agent. Curiosity, Trust and Commitment</h1>
 <p class="lede">This work observes and tests an artificial creature made of two parts. A body that feels what it lacks in three dimensions, its body, its resources and its bonds: what that body feels is what we call emotion here. And beside it a head that talks, a language model that advises it: that is reason. The question is when thinking is of use to a body like this.</p><p>To answer it we give the world time, with games twice as long, and we build three pieces. The first is a wide door: the advisor no longer proposes a step, but a whole plan with its emotional shape, what the body will feel on each leg of the way, and the body judges it with its own table. This door tells good advice from random advice, something the earlier one did not do; but, so as not to fool itself, it can only judge the small part of the good that the body is able to foresee. The second is trust, which is earned and lost with results: in the tests, an advisor that talks at random soon loses trust and stops moving the body with good news. The third is curiosity, installed as one more need of the body. As a nudge at each step it did not work. As a trip with a destination and commitment it did: while it travels, the body discovers almost six times more world per instant than when it is not traveling, without getting closer to danger; since it travels little, over the whole game it sees 16% more of the map than the body alone (31% on the stretches where no step was lost; section 10).</p><p>In a hundred games, the advisor&#x27;s plans gave the body no advantage at all. Almost all the improvement in the creature&#x27;s future goes through the others, and what they will do the body cannot foresee. What the work leaves is the division of roles that makes reason useful: the body says what it needs and, therefore, what is worth knowing; reason can say where to find it; and the body checks it, commits to the plan and only lets go of it if something important happens.</p><p>Everything was measured in a single world, private and with chosen neighbors, and without the creature learning from one game to the next.</p>
 <img src="../img/curiosity-card.png" alt="A life of the curious body with the eighteen trips it set out on: the blue line is the part of the map it still has to see; each band is a trip, green if completed, orange if it got stuck. After instant 5,000 no more trips are born.">
 <p><a class="cta" href="https://doi.org/10.5281/zenodo.23035785">Read on Zenodo</a></p>
 <p class="note">Paper five: second part of the series on emotion and reason in an agent. Concept DOI (all versions): <a href="https://doi.org/10.5281/zenodo.23035784">10.5281/zenodo.23035784</a>. Code, reports and data: <a href="https://github.com/Manelenrico/g-emv/tree/main/paper5">github.com/Manelenrico/g-emv/paper5</a>.</p>
-<p class="foot"><a href="../">&larr; All papers</a></p>
+</article>
+<nav class="pager"><a class="prev" href="../thinking/">&larr; 4 &middot; Thinking</a></nav>
+<p class="all"><a href="../">&larr; All papers</a></p>
+<footer>
+  <span><a href="https://orcid.org/0009-0008-1732-6310">Manel Enrico</a> · Independent researcher, Barcelona</span>
+  <span>An ongoing line of research on homeostatic agents</span>
+</footer>
+</div>
+<script src="../js/sphere.js"></script>
 </body>
 </html>

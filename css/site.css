@@ -75,3 +75,12 @@ p.all a:hover { text-decoration:underline; text-underline-offset:4px; }
   .crumbs .bar { padding:0 7px; }
   article h1 { font-size:25px; }
 }
+
+/* ── autores (WEB-49): bajo el titulo de cada pagina y bajo cada titulo de la lista de la portada ── */
+article h1:has(+ .byline) { margin-bottom:12px; }
+article p.byline { font-size:18px; margin:0 0 2px; }
+article p.byline a { text-decoration:none; }
+article p.byline a:hover { text-decoration:underline; text-underline-offset:4px; }
+article p.affil { color:var(--soft); font-size:14px; margin:0 0 26px; }
+article p.ctas { display:flex; flex-wrap:wrap; gap:12px; }
+.au { font-family:-apple-system, "Helvetica Neue", Arial, sans-serif; font-size:12px; letter-spacing:.06em; color:var(--soft); margin-top:5px; }

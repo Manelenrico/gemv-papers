@@ -11,6 +11,7 @@ carries its own small script for the language switch and the breathing sphere.
 | [`/pack/`](https://manelenrico.github.io/gemv-papers/pack/) | G-EMV: the Pack. Care Without Reward in a World That Pays for Killing | [10.5281/zenodo.22713650](https://doi.org/10.5281/zenodo.22713650) |
 | [`/thinking/`](https://manelenrico.github.io/gemv-papers/thinking/) | G-EMV: Emotion and Reason in an Agent. When Thinking Is Needed | [10.5281/zenodo.22844274](https://doi.org/10.5281/zenodo.22844274) |
 | [`/curiosity/`](https://manelenrico.github.io/gemv-papers/curiosity/) | G-EMV: Emotion and Reason in an Agent. Curiosity, Trust and Commitment | [10.5281/zenodo.23035785](https://doi.org/10.5281/zenodo.23035785) |
+| [`/helping/`](https://manelenrico.github.io/gemv-papers/helping/) | G-EMV: Emotion and Reason in an Agent. Helping Without Commanding | [10.5281/zenodo.23168539](https://doi.org/10.5281/zenodo.23168539) |
 
 Each page carries Open Graph and Twitter card metadata so that link previews
 render, and links to its DOI. No page redirects on its own.

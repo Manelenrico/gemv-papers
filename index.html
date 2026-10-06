@@ -171,6 +171,16 @@
   const cv = document.getElementById('sphere');
   const ctx = cv.getContext('2d');
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // ── la esfera reacciona al tocarla (WEB-56): los numeros ajustables, todos aqui ──
+  const RADIO_ZONA = 0.46;      // radio de la zona que reacciona, como parte del radio de la esfera en pantalla (0.46 = un 46 %)
+  const FUERZA_CARICIA = 0.14;  // caricia: que parte del camino hacia el cursor recorren los puntos de la zona (0.14 = un 14 %, el centro; menos hacia el borde)
+  const PROFUNDIDAD_GOLPE = 0.08; // golpe: cuanto se hunden hacia dentro los puntos del centro de la zona, como parte de su radio (0.08 = un 8 %) por cada golpe
+  const TOPE_GOLPES = 2.2;      // tope de acumulacion: los golpes seguidos suman hasta este valor (1 = un golpe entero; 2.2 = algo mas de dos golpes)
+  const VUELTA_S = 3.5;         // tiempo de vuelta a la calma, en segundos, al dejar de tocar (posicion y color)
+  const HUNDIMIENTO_S = 0.35;   // golpe: cuanto tarda en llegar a lo mas hondo, en segundos; la bajada empieza rapida y frena al llegar (sin rebote); el rojo va al mismo ritmo
+  const ROJO_GOLPE = 0.55;      // intensidad del rojo por golpe (0 = sin rojo; 1 = el rojo vivo de la esfera con un solo golpe)
+  const ENTRADA_S = 0.18;       // cuanto tarda la caricia en seguir al cursor, en segundos (suavidad de entrada)
+  const TOQUE_MAX_PX = 12, TOQUE_MAX_MS = 350; // en movil, un toque es un golpe solo si el dedo no se mueve mas de esto ni esta mas tiempo: arrastrar es desplazar la pagina
   // points on a sphere (Fibonacci)
   let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
   const N = 760, pts = [];
@@ -195,6 +205,32 @@
   }
   window.addEventListener('resize', size); size();
   const proj = new Array(N), strain = new Float32Array(N);
+  // estado de la reaccion: hundimiento acumulado por golpes (3D, radial; `golpeObj` es a donde va, `golpe` lo que se ve, que lo sigue cediendo) y desplazamiento de la caricia (en pantalla, px)
+  const golpe = new Float32Array(N), golpeObj = new Float32Array(N), carX = new Float32Array(N), carY = new Float32Array(N);
+  let raton = null, hayReaccion = false, toque = null, tPrev = 0;
+  const posEn = ev => { const b = cv.getBoundingClientRect(); return [ev.clientX - b.left, ev.clientY - b.top]; };
+  function golpea(mx, my) {
+    const rz = Math.min(W, H) * 0.36 * RADIO_ZONA;
+    for (let i = 0; i < N; i++) {
+      const q = proj[i]; if (!q || q[2] > 0.25) continue;                // solo la cara de delante
+      const d = Math.hypot(q[0] - mx, q[1] - my); if (d >= rz) continue;
+      const f = 1 - d / rz; golpeObj[i] = Math.min(TOPE_GOLPES, golpeObj[i] + f * f);
+    }
+    hayReaccion = true;
+  }
+  if (!reduce) {
+    cv.addEventListener('pointermove', ev => { if (ev.pointerType === 'mouse') { raton = posEn(ev); hayReaccion = true; } });
+    cv.addEventListener('pointerleave', () => { raton = null; });
+    cv.addEventListener('pointerdown', ev => {
+      if (ev.pointerType === 'mouse') { const [mx, my] = posEn(ev); golpea(mx, my); }
+      else toque = { x: ev.clientX, y: ev.clientY, t: performance.now(), id: ev.pointerId };   // el dedo: se decide al levantarlo
+    });
+    cv.addEventListener('pointerup', ev => {
+      if (toque && ev.pointerId === toque.id && Math.hypot(ev.clientX - toque.x, ev.clientY - toque.y) <= TOQUE_MAX_PX && performance.now() - toque.t <= TOQUE_MAX_MS) { const [mx, my] = posEn(ev); golpea(mx, my); }
+      toque = null;
+    });
+    cv.addEventListener('pointercancel', () => { toque = null; });
+  }
   // ink when calm, a warm red when strained
   // ink -> pale red -> vivid red
   const mix = (e, a) => {
@@ -204,7 +240,12 @@
     return 'rgba(' + Math.round(r) + ',' + Math.round(g) + ',' + Math.round(b) + ',' + a.toFixed(3) + ')';
   };
   function frame(ms) {
-    const t = ms / 1000;
+    const t = ms / 1000; const dt = Math.min(0.1, Math.max(0, t - tPrev)); tPrev = t;
+    // vuelta a la calma: lo acumulado por los golpes se deshace solo (al 5 % en VUELTA_S)
+    const des = Math.exp(-3 * dt / VUELTA_S);
+    // y lo que se ve cede hacia lo acumulado con una curva que empieza rapida y frena (al 95 % en HUNDIMIENTO_S), sin rebote
+    const cede = 1 - Math.exp(-3 * dt / HUNDIMIENTO_S);
+    if (hayReaccion) { let vivo = raton !== null; for (let i = 0; i < N; i++) { golpeObj[i] *= des; golpe[i] += (golpeObj[i] - golpe[i]) * cede; if (golpeObj[i] > 0.002 || golpe[i] > 0.002 || Math.abs(carX[i]) + Math.abs(carY[i]) > 0.02) vivo = true; else { golpeObj[i] = 0; golpe[i] = 0; carX[i] = 0; carY[i] = 0; } } hayReaccion = vivo; }
     ctx.clearRect(0, 0, W, H);
     const R = Math.min(W, H) * 0.36, cx = W / 2, cy = H / 2;
     const a = t * 0.12, b = 0.35 + Math.sin(t * 0.07) * 0.15;
@@ -220,12 +261,23 @@
       const k = 1 + dv + 0.03 * Math.sin(t * 0.9);
       // how far this point is from its balance, beyond the usual: 0 calm, 1 strained
       const e0 = Math.min(1, Math.max(0, (Math.abs(dv) - 0.12) / 0.15));
-      strain[i] = e0 * e0 * (3 - 2 * e0);
-      let X = x * k, Y = y * k, Z = z * k;
+      strain[i] = Math.min(1, e0 * e0 * (3 - 2 * e0) + ROJO_GOLPE * golpe[i]);    // el golpe tiñe de rojo como la tension
+      const kg = k * (1 - PROFUNDIDAD_GOLPE * golpe[i]);                              // y hunde hacia dentro
+      let X = x * kg, Y = y * kg, Z = z * kg;
       let X1 = X * ca + Z * sa, Z1 = -X * sa + Z * ca;
       let Y1 = Y * cb - Z1 * sb, Z2 = Y * sb + Z1 * cb;
       const p = 3.2 / (3.2 + Z2);
       proj[i] = [cx + X1 * R * p, cy + Y1 * R * p, Z2];
+    }
+    if (hayReaccion) {
+      // la caricia: los puntos de la zona se acercan un poco al cursor; al irse, vuelven en VUELTA_S
+      const rz = R * RADIO_ZONA, aIn = Math.min(1, dt / ENTRADA_S), aOut = 1 - des;
+      for (let i = 0; i < N; i++) {
+        let tx = 0, ty = 0;
+        if (raton && proj[i][2] <= 0.25) { const dx = raton[0] - proj[i][0], dy = raton[1] - proj[i][1], d = Math.hypot(dx, dy); if (d < rz) { const f = 1 - d / rz; tx = FUERZA_CARICIA * f * f * dx; ty = FUERZA_CARICIA * f * f * dy; } }
+        const a = (tx || ty) ? aIn : aOut; carX[i] += (tx - carX[i]) * a; carY[i] += (ty - carY[i]) * a;
+        proj[i][0] += carX[i]; proj[i][1] += carY[i];
+      }
     }
     ctx.lineWidth = 0.6;
     for (const [i, j] of links) {

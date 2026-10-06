@@ -174,8 +174,13 @@
   // ── la esfera reacciona al tocarla (WEB-56): los numeros ajustables, todos aqui ──
   const RADIO_ZONA = 0.46;      // radio de la zona que reacciona, como parte del radio de la esfera en pantalla (0.46 = un 46 %)
   const FUERZA_CARICIA = 0.14;  // caricia: que parte del camino hacia el cursor recorren los puntos de la zona (0.14 = un 14 %, el centro; menos hacia el borde)
-  const PROFUNDIDAD_GOLPE = 0.08; // golpe: cuanto se hunden hacia dentro los puntos del centro de la zona, como parte de su radio (0.08 = un 8 %) por cada golpe
-  const TOPE_GOLPES = 2.2;      // tope de acumulacion: los golpes seguidos suman hasta este valor (1 = un golpe entero; 2.2 = algo mas de dos golpes)
+  const PROFUNDIDAD_GOLPE = 0.12; // golpe: cuanto se hunden hacia dentro los puntos del centro de la zona, como parte de su radio (0.12 = un 12 %) por cada golpe
+  const TOPE_GOLPES = 2.4;      // tope de acumulacion: los golpes seguidos suman hasta este valor (1 = un golpe entero; 2.4 = unos cinco golpes seguidos, con lo que se deshace entre uno y otro)
+  const EXPANSION_ENTRADA = 0.04; // aviso al entrar el raton (solo ordenador): toda la esfera se expande esta parte de su tamano (0.04 = un 4 %) y vuelve sola; una vez por entrada
+  const EXPANSION_SUBE_S = 0.4; // aviso: cuanto tarda en expandirse, en segundos
+  const EXPANSION_BAJA_S = 1.5; // aviso: cuanto tarda en volver a su tamano, en segundos
+  const AVISOS_MAX = 2;         // aviso: cuantas veces como mucho (las primeras entradas del raton); el primer clic lo apaga del todo
+  const REARME_S = 30;          // aviso: tras estos segundos sin mover el raton sobre la esfera y sin clics, vuelve a estar disponible AVISOS_MAX veces
   const VUELTA_S = 3.5;         // tiempo de vuelta a la calma, en segundos, al dejar de tocar (posicion y color)
   const HUNDIMIENTO_S = 0.35;   // golpe: cuanto tarda en llegar a lo mas hondo, en segundos; la bajada empieza rapida y frena al llegar (sin rebote); el rojo va al mismo ritmo
   const ROJO_GOLPE = 0.55;      // intensidad del rojo por golpe (0 = sin rojo; 1 = el rojo vivo de la esfera con un solo golpe)
@@ -208,19 +213,27 @@
   // estado de la reaccion: hundimiento acumulado por golpes (3D, radial; `golpeObj` es a donde va, `golpe` lo que se ve, que lo sigue cediendo) y desplazamiento de la caricia (en pantalla, px)
   const golpe = new Float32Array(N), golpeObj = new Float32Array(N), carX = new Float32Array(N), carY = new Float32Array(N);
   let raton = null, hayReaccion = false, toque = null, tPrev = 0;
+  let avisoT0 = -1, avisoHecho = false;                                 // el aviso: cuando empezo y si ya se hizo en esta entrada del raton
+  let avisosHechos = 0, avisoApagado = false, ultimaActividad = performance.now() / 1000;   // cuantos avisos van, si un clic lo apago, y la ultima vez que hubo raton o clic (para el rearme)
   const posEn = ev => { const b = cv.getBoundingClientRect(); return [ev.clientX - b.left, ev.clientY - b.top]; };
   function golpea(mx, my) {
+    avisoT0 = -1; avisoApagado = true; ultimaActividad = performance.now() / 1000;   // un clic cancela la expansion al instante y apaga el aviso: nunca expansion y hundimiento a la vez
     const rz = Math.min(W, H) * 0.36 * RADIO_ZONA;
     for (let i = 0; i < N; i++) {
       const q = proj[i]; if (!q || q[2] > 0.25) continue;                // solo la cara de delante
       const d = Math.hypot(q[0] - mx, q[1] - my); if (d >= rz) continue;
-      const f = 1 - d / rz; golpeObj[i] = Math.min(TOPE_GOLPES, golpeObj[i] + f * f);
+      const f = 1 - d / rz; golpeObj[i] = Math.min(TOPE_GOLPES, golpeObj[i] + f * f);   // los golpes seguidos se acumulan, hasta el tope
     }
     hayReaccion = true;
   }
   if (!reduce) {
-    cv.addEventListener('pointermove', ev => { if (ev.pointerType === 'mouse') { raton = posEn(ev); hayReaccion = true; } });
-    cv.addEventListener('pointerleave', () => { raton = null; });
+    cv.addEventListener('pointermove', ev => { if (ev.pointerType === 'mouse') { raton = posEn(ev); hayReaccion = true; ultimaActividad = performance.now() / 1000; } });
+    cv.addEventListener('pointerenter', ev => {
+      if (ev.pointerType !== 'mouse' || avisoHecho) return;
+      avisoHecho = true; ultimaActividad = performance.now() / 1000;
+      if (!avisoApagado && avisosHechos < AVISOS_MAX) { avisosHechos++; avisoT0 = performance.now() / 1000; hayReaccion = true; }
+    });
+    cv.addEventListener('pointerleave', () => { raton = null; avisoHecho = false; });
     cv.addEventListener('pointerdown', ev => {
       if (ev.pointerType === 'mouse') { const [mx, my] = posEn(ev); golpea(mx, my); }
       else toque = { x: ev.clientX, y: ev.clientY, t: performance.now(), id: ev.pointerId };   // el dedo: se decide al levantarlo
@@ -245,7 +258,18 @@
     const des = Math.exp(-3 * dt / VUELTA_S);
     // y lo que se ve cede hacia lo acumulado con una curva que empieza rapida y frena (al 95 % en HUNDIMIENTO_S), sin rebote
     const cede = 1 - Math.exp(-3 * dt / HUNDIMIENTO_S);
-    if (hayReaccion) { let vivo = raton !== null; for (let i = 0; i < N; i++) { golpeObj[i] *= des; golpe[i] += (golpeObj[i] - golpe[i]) * cede; if (golpeObj[i] > 0.002 || golpe[i] > 0.002 || Math.abs(carX[i]) + Math.abs(carY[i]) > 0.02) vivo = true; else { golpeObj[i] = 0; golpe[i] = 0; carX[i] = 0; carY[i] = 0; } } hayReaccion = vivo; }
+    if (hayReaccion) { let vivo = raton !== null; for (let i = 0; i < N; i++) { golpeObj[i] *= des; golpe[i] += (golpeObj[i] - golpe[i]) * cede; if (golpeObj[i] > 0.002 || golpe[i] > 0.002 || Math.abs(carX[i]) + Math.abs(carY[i]) > 0.02 || avisoT0 >= 0) vivo = true; else { golpeObj[i] = 0; golpe[i] = 0; carX[i] = 0; carY[i] = 0; } } hayReaccion = vivo; }
+    // el aviso al entrar: sube en EXPANSION_SUBE_S (rapido al principio, frena al llegar) y baja en EXPANSION_BAJA_S, suave
+    if (avisoT0 < 0 && (avisosHechos > 0 || avisoApagado) && t - ultimaActividad > REARME_S) { avisosHechos = 0; avisoApagado = false; }   // el rearme
+    let aviso = 0;
+    if (avisoT0 >= 0) {
+      const u = t - avisoT0;
+      if (u < EXPANSION_SUBE_S) { const v = u / EXPANSION_SUBE_S; aviso = 1 - (1 - v) * (1 - v); }
+      else if (u < EXPANSION_SUBE_S + EXPANSION_BAJA_S) { const v = (u - EXPANSION_SUBE_S) / EXPANSION_BAJA_S; aviso = 1 - v * v * (3 - 2 * v); }
+      else avisoT0 = -1;
+      hayReaccion = true;
+    }
+    const kAviso = 1 + EXPANSION_ENTRADA * aviso;
     ctx.clearRect(0, 0, W, H);
     const R = Math.min(W, H) * 0.36, cx = W / 2, cy = H / 2;
     const a = t * 0.12, b = 0.35 + Math.sin(t * 0.07) * 0.15;
@@ -262,7 +286,7 @@
       // how far this point is from its balance, beyond the usual: 0 calm, 1 strained
       const e0 = Math.min(1, Math.max(0, (Math.abs(dv) - 0.12) / 0.15));
       strain[i] = Math.min(1, e0 * e0 * (3 - 2 * e0) + ROJO_GOLPE * golpe[i]);    // el golpe tiñe de rojo como la tension
-      const kg = k * (1 - PROFUNDIDAD_GOLPE * golpe[i]);                              // y hunde hacia dentro
+      const kg = k * kAviso * (1 - PROFUNDIDAD_GOLPE * golpe[i]);                     // el aviso expande; el golpe hunde hacia dentro
       let X = x * kg, Y = y * kg, Z = z * kg;
       let X1 = X * ca + Z * sa, Z1 = -X * sa + Z * ca;
       let Y1 = Y * cb - Z1 * sb, Z2 = Y * sb + Z1 * cb;

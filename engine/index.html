@@ -35,24 +35,39 @@
 <header class="head-paper">
   <a class="mark" href="../">G-EMV</a>
   <canvas id="sphere-mini" class="mini" aria-label="A small breathing sphere of points"></canvas>
+  <nav><a><button class="lang" data-l="en">EN</button> · <button class="lang" data-l="es">ES</button></a></nav>
 </header>
-<nav class="crumbs"><span class="here">1 &middot; The engine</span><span class="bar">|</span><a href="../hive/">2 &middot; The Hive</a><span class="bar">|</span><a href="../pack/">3 &middot; The Pack</a><span class="bar">|</span><a href="../thinking/">4 &middot; Thinking</a><span class="bar">|</span><a href="../curiosity/">5 &middot; Curiosity</a><span class="bar">|</span><a href="../helping/">6 &middot; Helping</a></nav>
+<nav class="crumbs"><span class="here">1 &middot; <span class="en">The engine</span><span class="es">El motor</span></span><span class="bar">|</span><a href="../hive/">2 &middot; <span class="en">The Hive</span><span class="es">La colmena</span></a><span class="bar">|</span><a href="../pack/">3 &middot; <span class="en">The Pack</span><span class="es">La manada</span></a><span class="bar">|</span><a href="../thinking/">4 &middot; <span class="en">Thinking</span><span class="es">Pensar</span></a><span class="bar">|</span><a href="../curiosity/">5 &middot; <span class="en">Curiosity</span><span class="es">Curiosidad</span></a><span class="bar">|</span><a href="../helping/">6 &middot; <span class="en">Helping</span><span class="es">Ayudar</span></a></nav>
 <article>
-<h1>G-EMV: A Geometric Architecture of Homeostatic Orientation for Agents</h1>
+<h1><span class="en">G-EMV: A Geometric Architecture of Homeostatic Orientation for Agents</span><span class="es">G-EMV: una arquitectura geométrica de orientación homeostática para agentes</span></h1>
 <p class="byline"><a href="https://orcid.org/0009-0008-1732-6310">Manel Enrico</a></p>
-<p class="affil">Independent researcher, Barcelona</p>
-<p class="lede">This work proposes G-EMV, a geometric architecture of homeostatic orientation in which this criterion of relevance emerges from the structure of the agent itself, without being specified from outside.</p>
+<p class="affil"><span class="en">Independent researcher, Barcelona</span><span class="es">Investigador independiente, Barcelona</span></p>
+<p class="lede en">This work proposes G-EMV, a geometric architecture of homeostatic orientation in which this criterion of relevance emerges from the structure of the agent itself, without being specified from outside.</p><p class="lede es">Este trabajo propone G-EMV, una arquitectura geométrica de orientación homeostática en la que ese criterio de relevancia emerge de la estructura del propio agente, sin ser especificado desde fuera.</p>
 <img src="../img/engine.png" alt="Bar chart: saturation blindness, calm versus saturated response to opportunity and danger.">
-<p><a class="cta" href="https://doi.org/10.5281/zenodo.21026795">Read on Zenodo</a></p>
-<p class="note">Paper one of three.</p>
+<p class="ctas"><a class="cta" href="https://doi.org/10.5281/zenodo.21026795"><span class="en">Read on Zenodo</span><span class="es">Leer en Zenodo</span></a></p>
+<p class="note en">Paper one of three.</p><p class="note es">Trabajo uno de tres.</p>
 </article>
-<nav class="pager"><a class="next" href="../hive/">2 &middot; The Hive &rarr;</a></nav>
-<p class="all"><a href="../">&larr; All papers</a></p>
+<nav class="pager"><a class="next" href="../hive/">2 &middot; <span class="en">The Hive</span><span class="es">La colmena</span> &rarr;</a></nav>
+<p class="all"><a href="../">&larr; <span class="en">All papers</span><span class="es">Todos los trabajos</span></a></p>
 <footer>
-  <span><a href="https://orcid.org/0009-0008-1732-6310">Manel Enrico</a> · Independent researcher, Barcelona</span>
-  <span>An ongoing line of research on homeostatic agents</span>
+  <span><a href="https://orcid.org/0009-0008-1732-6310">Manel Enrico</a> · <span class="en">Independent researcher, Barcelona</span><span class="es">Investigador independiente, Barcelona</span></span>
+  <span><span class="en">An ongoing line of research on homeostatic agents</span><span class="es">Una línea de investigación sobre agentes homeostáticos, en marcha</span></span>
 </footer>
 </div>
+<script>
+(function () {
+  function setLang(l) {
+    document.body.classList.toggle('es', l === 'es');
+    document.documentElement.lang = l;
+    document.querySelectorAll('.lang').forEach(b => b.classList.toggle('on', b.dataset.l === l));
+    try { localStorage.setItem('gemv-lang', l); } catch (e) {}
+  }
+  let l = 'en';
+  try { l = localStorage.getItem('gemv-lang') || ((navigator.language || '').startsWith('es') ? 'es' : 'en'); } catch (e) {}
+  setLang(l);
+  document.querySelectorAll('.lang').forEach(b => b.addEventListener('click', () => setLang(b.dataset.l)));
+})();
+</script>
 <script src="../js/sphere.js"></script>
 <script data-goatcounter="https://gemv.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body>

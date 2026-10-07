@@ -84,3 +84,7 @@ article p.byline a:hover { text-decoration:underline; text-underline-offset:4px;
 article p.affil { color:var(--soft); font-size:14px; margin:0 0 26px; }
 article p.ctas { display:flex; flex-wrap:wrap; gap:12px; }
 .au { font-family:-apple-system, "Helvetica Neue", Arial, sans-serif; font-size:12px; letter-spacing:.06em; color:var(--soft); margin-top:5px; }
+
+/* ── las dos lenguas en las paginas de cada paper (WEB-58) ── */
+.head-paper nav { margin-left:auto; }
+article p.ctas { display:flex; flex-wrap:wrap; gap:12px; }

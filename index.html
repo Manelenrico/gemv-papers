@@ -79,6 +79,12 @@
     .paper { grid-template-columns: 1fr; gap:6px; }
     .doi { padding-top:0; }
   }
+  /* la forma de las emociones (WEB-60): el enlace discreto bajo la presentacion */
+  .hero p.origin { margin:26px 0 0; font-style:italic; font-size:17px; color:var(--soft); }
+  .hero p.origin a { text-decoration:none; border-bottom:1px solid var(--line); }
+  .hero p.origin a:hover { color:var(--ink); border-bottom-color:var(--ink); }
+  .hero p.origin a::after { content:" \2192"; }
+  .hero p.origin .nw { white-space:nowrap; }
 </style>
 </head>
 <body>
@@ -103,6 +109,7 @@
       <p class="es">Puesta en mundos que no se hicieron para ella, junto a agentes entrenados para ganar, busca comida, huye, le da a su hermano y se queda a su lado. Junto a ella hay ahora un modelo de lenguaje que puede proponerle planes; el cuerpo los juzga con lo que siente, y tiene la última palabra.</p>
       <p class="en">Each creature feels three things: its body, its resources and its bonds. Every instant it imagines a handful of possible futures and chooses the one that brings it closest to where it wants to be. Nothing tells it what to do; what hurts and what relieves it does.</p>
       <p class="en">Put in worlds it was not made for, alongside agents trained to win, it forages, flees, gives to its sibling and stays by it. Beside it, a language model can now propose plans; the body judges them with what it feels, and keeps the last word.</p>
+      <p class="origin"><a href="shape/"><span class="en">The shape of emotions: where <span class="nw">G-EMV</span> comes from</span><span class="es">La forma de las emociones: de dónde viene <span class="nw">G-EMV</span></span></a></p>
     </div>
     <div class="viz"><canvas id="sphere" aria-label="A slowly breathing sphere of connected nodes"></canvas></div>
   </section>

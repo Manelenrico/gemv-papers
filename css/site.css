@@ -91,3 +91,6 @@ article p.ctas { display:flex; flex-wrap:wrap; gap:12px; }
 
 /* ── la forma de las emociones (WEB-60): la pagina /shape/ (el enlace de la portada va en el <style> de index.html) ── */
 article.essay p.byline { margin:0 0 30px; }
+
+/* ── pie de figura (WEB-62): la figura de /learning/ lleva su pie del paper ── */
+article p.cap { color:var(--soft); font-size:15px; line-height:1.5; margin:-14px 0 30px; }
